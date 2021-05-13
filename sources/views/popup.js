@@ -1,7 +1,5 @@
 import {JetView} from "webix-jet";
 
-import words from "../models/words";
-
 export default class PopupView extends JetView {
 	config() {
 		const window = {
@@ -97,7 +95,6 @@ export default class PopupView extends JetView {
 		if (validationResult) {
 			const newWord = this.form.getValues();
 			newWord.groupId = this.currentId;
-			words.add(newWord);
 			this.closePopup();
 		}
 	}

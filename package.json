@@ -9,6 +9,7 @@
   },
   "main": "sources/myapp.js",
   "scripts": {
+    "dev": "nodemon backend/index",
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint sources/",
     "build": "webpack --env.production true",
@@ -43,12 +44,19 @@
     "less-loader": "^8.1.1",
     "lint-staged": "^10.5.4",
     "mini-css-extract-plugin": "^1.5.0",
+    "nodemon": "^2.0.7",
     "url-loader": "^4.1.1",
     "webpack": "^5.34.0",
     "webpack-cli": "^4.6.0",
     "webpack-dev-server": "^3.11.2"
   },
   "dependencies": {
+    "cors": "^2.8.5",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "express-handlebars": "^5.3.2",
+    "mongodb": "^3.6.6",
+    "mongoose": "^5.12.8",
     "webix-jet": "^2.1.3"
   }
 }

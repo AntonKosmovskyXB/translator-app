@@ -1,7 +1,5 @@
 import {JetView} from "webix-jet";
 
-import words from "../models/words";
-import wordsGroups from "../models/wordsGroups";
 import PopupView from "./popup";
 
 export default class WordsView extends JetView {
@@ -59,13 +57,12 @@ export default class WordsView extends JetView {
 					width: 150,
 					click: () => {
 						if (this.$$("groupNameLabel").getValue() !== "") {
-							wordsGroups.add(
-								{
-									name: this.$$("groupNameLabel").getValue(),
-									date: new Date(),
-									numberOfWords: 0
-								}
-							);
+							const newGroup = {
+								name: this.$$("groupNameLabel").getValue(),
+								date: new Date(),
+								numberOfWords: 0
+							};
+							webix.ajax().post("http://localhost:3000/wordsGroups", newGroup);
 							this.$$("groupNameLabel").setValue("");
 						}
 
@@ -139,10 +136,8 @@ export default class WordsView extends JetView {
 		this.popup = this.ui(PopupView);
 		this.groupsTable = this.$$("groupDatatable");
 		this.wordsTable = this.$$("wordsDatatable");
-		this.groupsTable.sync(wordsGroups);
-		this.wordsTable.sync(words);
 	}
-
+/*
 	urlChange() {
 		wordsGroups.waitData.then(() => {
 			const id = this.getParam("id", true) || wordsGroups.getFirstId();
@@ -162,4 +157,6 @@ export default class WordsView extends JetView {
 	setUrlParam(selectedId) {
 		this.setParam("id", selectedId, true);
 	}
+
+*/
 }
