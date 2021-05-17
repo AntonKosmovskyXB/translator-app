@@ -4,7 +4,7 @@ const schema = new Schema({
 	englishWord: String,
 	russianWord: String,
 	partOfSpeech: String,
-	groupId: String
+	groupId: Number
 });
 
 module.exports = model("Words", schema);

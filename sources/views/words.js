@@ -41,8 +41,8 @@ export default class WordsView extends JetView {
 			},
 			on: {
 				onAfterSelect: (item) => {
-					this.setParam("id", item, true);
 					this.app.callEvent("onGroupSelect", [item.id]);
+					this.setParam("id", item.id, true);
 				}
 			}
 		};
@@ -62,7 +62,9 @@ export default class WordsView extends JetView {
 								date: new Date(),
 								numberOfWords: 0
 							};
-							webix.ajax().post("http://localhost:3000/wordsGroups", newGroup);
+							webix.ajax().post("http://localhost:3000/wordsGroups", newGroup).then((data) => {
+								this.groupsTable.add(data.json());
+							});
 							this.$$("groupNameLabel").setValue("");
 						}
 
@@ -136,27 +138,25 @@ export default class WordsView extends JetView {
 		this.popup = this.ui(PopupView);
 		this.groupsTable = this.$$("groupDatatable");
 		this.wordsTable = this.$$("wordsDatatable");
-	}
-/*
-	urlChange() {
-		wordsGroups.waitData.then(() => {
-			const id = this.getParam("id", true) || wordsGroups.getFirstId();
+		webix.ajax().get("http://localhost:3000/wordsGroups").then((data) => {
+			this.groupsTable.parse(data);
+			const id = this.getParam("id") || this.groupsTable.getFirstId();
 
-			if (id && wordsGroups.exists(id)) {
+			if (id && this.groupsTable.exists(id)) {
 				this.groupsTable.select(id);
 			}
 
 			else {
-				this.groupsTable.select(wordsGroups.getFirstId());
+				this.groupsTable.select(this.groupsTable.getFirstId());
 			}
 		});
 
-		this.wordsTable.filter(item => item.groupId === this.getParam("id", true).id);
+		webix.ajax().get("http://localhost:3000/words").then(() => {
+			this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)));
+		});
 	}
 
-	setUrlParam(selectedId) {
-		this.setParam("id", selectedId, true);
+	urlChange() {
+		this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)));
 	}
-
-*/
 }

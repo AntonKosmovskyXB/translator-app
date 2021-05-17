@@ -75,8 +75,9 @@ export default class PopupView extends JetView {
 		this.form = this.$$("popupForm");
 		this.popup = this.getRoot();
 		this.saveButton = this.$$("saveButton");
-		this.on(this.app, "onGroupSelect", (id) => {
-			this.currentId = Number.parseInt(id);
+		this.wordsTable = (this.getParentView().$$("wordsDatatable"));
+		webix.ajax().get("http://localhost:3000/words").then((data) => {
+			this.wordsTable.parse(data);
 		});
 	}
 
@@ -94,7 +95,10 @@ export default class PopupView extends JetView {
 		const validationResult = this.form.validate();
 		if (validationResult) {
 			const newWord = this.form.getValues();
-			newWord.groupId = this.currentId;
+			newWord.groupId = Number.parseInt(this.getParam("id", true));
+			webix.ajax().post("http://localhost:3000/words", newWord).then((data) => {
+				this.wordsTable.add(data.json());
+			});
 			this.closePopup();
 		}
 	}
