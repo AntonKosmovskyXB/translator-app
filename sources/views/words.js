@@ -158,5 +158,6 @@ export default class WordsView extends JetView {
 
 	urlChange() {
 		this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)));
+		this.app.callEvent("onUrlChange", [this.getParam("id", true)]);
 	}
 }
