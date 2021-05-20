@@ -56,3 +56,12 @@
 	font-size:20px;
 	vertical-align:middle;
 }
+.red_button .webix_button {
+    background: #FC3636;
+    color: #ffffff;
+}
+
+.red_button .webix_button:hover {
+    background: #f00909;
+    color: #ffffff;
+}

@@ -4,6 +4,7 @@ const express = require("express");
 const exphbs = require("express-handlebars");
 const mongoose = require("mongoose");
 
+const authRoute = require("./routes/auth");
 const wordsRoute = require("./routes/words");
 const wordsGroupsRoute = require("./routes/wordsGroups");
 
@@ -20,6 +21,7 @@ app.engine("html", exphbs());
 app.set("view engine", "html");
 app.use(express.static(`${__dirname}/public`));
 
+app.use("/auth", authRoute);
 app.use("/wordsGroups", wordsGroupsRoute);
 app.use("/words", wordsRoute);
 

@@ -99,6 +99,7 @@ export default class PopupView extends JetView {
 		if (validationResult) {
 			const newWord = this.form.getValues();
 			newWord.groupId = Number.parseInt(this.id);
+			newWord.user = webix.storage.local.get("user");
 			webix.ajax().post("http://localhost:3000/words", newWord).then((data) => {
 				this.wordsTable.add(data.json());
 			});

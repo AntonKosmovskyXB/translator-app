@@ -1,10 +1,11 @@
 const {Router} = require("express");
 
+const authMiddleware = require("../authMiddleware");
 const Words = require("../models/words");
 
 const router = Router();
 
-router.get("/", (req, res) => {
+router.get("/", authMiddleware, (req, res) => {
 	Words.find({}).then((wordsGroups) => {
 		const wordsList = [];
 		for (let i = 0; i < wordsGroups.length; i++) {
@@ -12,7 +13,8 @@ router.get("/", (req, res) => {
 				englishWord: wordsGroups[i].englishWord,
 				russianWord: wordsGroups[i].russianWord,
 				partOfSpeech: wordsGroups[i].partOfSpeech,
-				groupId: wordsGroups[i].groupId
+				groupId: wordsGroups[i].groupId,
+				user: wordsGroups[i].user
 			});
 		}
 		res.send(wordsList);
@@ -24,13 +26,15 @@ router.post("/", (req, res) => {
 		englishWord: req.body.englishWord,
 		russianWord: req.body.russianWord,
 		partOfSpeech: req.body.partOfSpeech,
-		groupId: req.body.groupId
+		groupId: req.body.groupId,
+		user: req.body.user
 	}).then((word) => {
 		const newWordObj = {
 			englishWord: word.englishWord,
 			russianWord: word.russianWord,
 			partOfSpeech: word.partOfSpeech,
-			groupId: word.groupId
+			groupId: word.groupId,
+			user: word.user
 		};
 		res.send(newWordObj);
 	});

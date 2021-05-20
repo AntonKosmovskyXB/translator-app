@@ -11,7 +11,8 @@ const schema = new Schema({
 	name: String,
 	date: String,
 	numberOfWords: Number,
-	id: Number
+	id: Number,
+	user: String
 });
 
 schema.plugin(autoIncrement.plugin, {model: "WordsGroups", field: "id"});

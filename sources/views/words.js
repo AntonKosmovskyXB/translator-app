@@ -60,7 +60,8 @@ export default class WordsView extends JetView {
 							const newGroup = {
 								name: this.$$("groupNameLabel").getValue(),
 								date: new Date(),
-								numberOfWords: 0
+								numberOfWords: 0,
+								user: webix.storage.local.get("user")
 							};
 							webix.ajax().post("http://localhost:3000/wordsGroups", newGroup).then((data) => {
 								this.groupsTable.add(data.json());
@@ -135,29 +136,35 @@ export default class WordsView extends JetView {
 	}
 
 	init() {
+		this.token = webix.storage.local.get("token");
 		this.popup = this.ui(PopupView);
 		this.groupsTable = this.$$("groupDatatable");
 		this.wordsTable = this.$$("wordsDatatable");
-		webix.ajax().get("http://localhost:3000/wordsGroups").then((data) => {
-			this.groupsTable.parse(data);
+		if (!webix.storage.local.get("user")) {
+			return false;
+		}
+		webix.ajax().headers({authorization: this.token}).get("http://localhost:3000/wordsGroups").then((data) => {
+			this.groupsTable.parse(data.json());
+			this.groupsTable.filter(item => item.user === webix.storage.local.get("user"));
 			const id = this.getParam("id") || this.groupsTable.getFirstId();
 
 			if (id && this.groupsTable.exists(id)) {
 				this.groupsTable.select(id);
 			}
 
-			else {
+			else if (this.groupsTable.getFirstId()) {
 				this.groupsTable.select(this.groupsTable.getFirstId());
 			}
 		});
 
-		webix.ajax().get("http://localhost:3000/words").then(() => {
-			this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)));
+		webix.ajax().headers({authorization: this.token}).get("http://localhost:3000/words").then((data) => {
+			this.wordsTable.parse(data);
+			this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)) && item.user === webix.storage.local.get("user"));
 		});
 	}
 
 	urlChange() {
-		this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)));
+		this.wordsTable.filter(item => item.groupId === Number.parseInt(this.getParam("id", true)) && item.user === webix.storage.local.get("user"));
 		this.app.callEvent("onUrlChange", [this.getParam("id", true)]);
 	}
 }
